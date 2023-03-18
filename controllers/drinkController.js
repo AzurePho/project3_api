@@ -15,7 +15,7 @@ async function getOne(req, res, next) {
     const foundDrink = await Drinks.findById(id);
     if (foundDrink) {
       return res.status(200).json({
-        message: "The Drink is finded",
+        message: "Drink has been found",
         data: foundDrink,
       });
     } else {

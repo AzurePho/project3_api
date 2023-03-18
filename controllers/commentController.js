@@ -40,16 +40,16 @@ async function updateComment(req, res, next) {
         .json({ message: `No comment with id of ${commentId}` });
     }
     console.log({ "User making the request": req.currentUser });
-    console.log("comment createdBy id", commentToUpdate.createdBy.toString());
+    console.log("comment createdBy id", commentUpdate.createdBy.toString());
 
     if (
       req.currentUser.role !== "admin" &&
-      req.currentUser.id !== commentToUpdate.createdBy.toString()
+      req.currentUser.id !== commentUpdate.createdBy.toString()
     ) {
       return res.status(403).json({ message: "Unauthorised" });
     }
 
-    commentToUpdate.text = req.body.text;
+    commentUpdate.text = req.body.text;
     await foundDrink.save();
 
     return res.status(200).json({

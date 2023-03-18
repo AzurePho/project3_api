@@ -14,7 +14,7 @@ const drinkSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
     flavour: { type: String, required: true },
-    carbonated: { type: Boolean, default: false },
+    description: { type: String, required: true },
     calories: { type: Number, required: true },
     allergies: String,
     alcohol: { type: Boolean, default: false },

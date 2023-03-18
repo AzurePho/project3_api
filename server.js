@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 // app.use(router);
 
 const startServer = async () => {
-  // await connectToDb();
+  await connectToDb();
   console.log("Database connected");
   app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 };
