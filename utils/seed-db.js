@@ -1,16 +1,16 @@
 import { connectToDb } from "./db.js";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import express from "express";
-import Drinks from "./models/drink.js";
-import user from "../models/user.js";
+import Drink from "../models/drink.js";
+import User from "../models/user.js";
 
 async function hashPassword(plainTextPassword) {
   const hashedPassword = await bcrypt.hash(plainTextPassword, 10);
   return hashedPassword;
 }
 
-const app = express();
+const adminId = "6415b7edeb5413625c883fda";
+const userId = "6415b7edeb5413625c883fdb";
 
 const seedingData = {
   drinks: [
@@ -68,38 +68,17 @@ const seedingData = {
   users: [
     {
       email: "admin@gmail.com",
-      username: "admin",
+      userName: "admin",
       password: await hashPassword("adminpassword"),
       role: "admin",
-      // id: ,
+      id: adminId,
     },
     {
       email: "user1@gmail.com",
-      username: "user1",
+      userName: "user1",
       password: await hashPassword("user1@1234"),
       role: "user",
-      // id: ,
-    },
-    {
-      email: "user2@gmail.com",
-      username: "user2",
-      password: await hashPassword("user2@1234"),
-      role: "user",
-      // id: ,
-    },
-    {
-      email: "user3@gmail.com",
-      username: "user3",
-      password: await hashPassword("user3@1234"),
-      role: "user",
-      // id: ,
-    },
-    {
-      email: "user4@gmail.com",
-      username: "user4",
-      password: await hashPassword("user4@1234"),
-      role: "user",
-      // id: ,
+      id: userId,
     },
   ],
 };
@@ -108,9 +87,17 @@ async function seedDb() {
   await connectToDb();
   await mongoose.connection.db.dropDatabase();
   console.log("Database connected");
-  const drinksDb = await Drinks.create(drinks);
+  const drinksDb = await Drink.create(
+    seedingData.drinks.map((drink) => ({
+      ...drink,
+      createdBy: userId,
+    }))
+  );
   console.log(drinksDb);
-  const usersDb = await user.create(users);
+  const usersDb = await User.create(seedingData.users);
+  console.log(`created ${usersDb.length} users in database`);
   console.log(usersDb);
-  mongoose.disconnect();
+  await mongoose.disconnect();
 }
+
+seedDb();
