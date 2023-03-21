@@ -19,6 +19,7 @@ const drinkSchema = mongoose.Schema(
     allergies: String,
     alcohol: { type: Boolean, default: false },
     createdBy: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
+    image: { type: String, required: true },
   },
   {
     timestamps: true,
