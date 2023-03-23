@@ -28,7 +28,7 @@ async function getOne(req, res, next) {
   }
 }
 
-async function postAll(req, res) {
+async function postAll(req, res, next) {
   const newDrink = { ...req.body, createdBy: req.currentUser.id };
 
   console.log(req.currentUser);
