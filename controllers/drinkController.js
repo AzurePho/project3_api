@@ -29,10 +29,19 @@ async function getOne(req, res, next) {
 }
 
 async function postAll(req, res) {
-  const newDrink = req.body;
-  await Drinks.create(newDrink);
+  const newDrink = { ...req.body, createdBy: req.currentUser.id };
 
-  return res.status(200).json({ message: "You created your drink collection" });
+  console.log(req.currentUser);
+
+  try {
+    const dbResponse = await Drinks.create(newDrink);
+    return res.status(200).json({
+      message: "You created your drink collection",
+      addedDrink: dbResponse,
+    });
+  } catch (err) {
+    next(err);
+  }
 }
 
 async function updateOne(req, res, next) {

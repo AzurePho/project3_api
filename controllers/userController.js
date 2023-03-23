@@ -1,13 +1,7 @@
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
-<<<<<<< HEAD
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../consts.js";
-=======
-import jwt from "jsonwebtoken"
-import { JWT_SECRET } from "../consts.js";
-
->>>>>>> 6c20be6daf6aaddf2ea5d3c110820c13316369df
 
 const register = async (req, res, next) => {
   const userData = req.body;
