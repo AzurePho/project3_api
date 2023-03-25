@@ -55,12 +55,13 @@ async function updateOne(req, res, next) {
 
 
     const foundDrink = await Drinks.findById(id);
-
+console.log(foundDrink);
 
     if(!foundDrink){
       return res.status(404).json({message:`Drink with id ${id} not found.`});
     }
-
+console.log(req.currentUser.id);
+console.log(req.currentUser.role);
     if(
       req.currentUser.id !== foundDrink.createdBy.toString()&&
       req.currentUser.role !== "admin"
