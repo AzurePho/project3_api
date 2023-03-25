@@ -15,7 +15,8 @@ router
 router
   .route("/drinks/:id")
   .get(drinkController.getOne)
-  .patch(auth, drinkController.updateOne)
+  .patch(auth, body("_id").not().exists(),
+  validate, drinkController.updateOne)
   .delete(auth, drinkController.deleteOne);
 
 router.route("/comment/:drinkId").post(auth, commentController.createComment);

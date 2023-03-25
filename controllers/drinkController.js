@@ -29,6 +29,7 @@ async function getOne(req, res, next) {
 }
 
 async function postAll(req, res, next) {
+  
   const newDrink = { ...req.body, createdBy: req.currentUser.id };
 
   console.log(req.currentUser);
@@ -46,34 +47,74 @@ async function postAll(req, res, next) {
 
 async function updateOne(req, res, next) {
   const { id } = req.params;
+  const dataToUpdated = req.body;
+
+
+
   try {
-    const foundDrink = await Drinks.findByIdAndUpdate(id, req.body, {
+
+
+    const foundDrink = await Drinks.findById(id);
+
+
+    if(!foundDrink){
+      return res.status(404).json({message:`Drink with id ${id} not found.`});
+    }
+
+    if(
+      req.currentUser.id !== foundDrink.createdBy.toString()&&
+      req.currentUser.role !== "admin"
+    ){
+      return res.status(403).json({message:"Unauthorized"});
+    }
+
+
+    const updatedDrink = await Drinks.findByIdAndUpdate(id, dataToUpdated, {
       returnDocument: "after",
     });
-    if (foundDrink) {
-      return res.status(200).json({
-        message: "The Drink is updated",
-        data: foundDrink,
-      });
-    } else {
-      return res.status(404).json({
-        message: `Could not find a drink with this id : ${id}`,
-      });
-    }
-  } catch (err) {
+
+    return res.status(200).json({
+      message: "The Drink is updated",
+      data: updatedDrink,
+    });
+
+  }catch (err) {
     next(err);
   }
 }
 
+
 async function deleteOne(req, res, next) {
-  const { id } = req.params;
+
+  const {id }  = req.params;
+  console.log(id);
 
   try {
-    const foundDrink = await Drinks.findByIdAndDelete(id);
-    if (foundDrink) {
+
+    const drinkToDelete = await Drinks.findById(id);
+console.log(drinkToDelete);
+    if(!drinkToDelete) {
+
+      return res
+      .status(404)
+      .json({message: `Drink with id ${id} could not be found.`});
+    }
+
+    if(
+      req.currentUser.id !== drinkToDelete.createdBy.toString() &&
+      req.currentUser.role !== "admin"
+    ){
+      return res.status(403).json({message: "Unauthorized"});
+    }
+
+
+    const deleteDrink = await Drinks.findByIdAndDelete(id);
+
+
+    if (deleteDrink) {
       return res.status(200).json({
         message: "The drink is deleted",
-        data: foundDrink,
+        data: deleteDrink,
       });
     } else {
       return res.status(404).json({

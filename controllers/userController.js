@@ -22,6 +22,8 @@ const register = async (req, res, next) => {
     }
     const salt = await bcrypt.genSalt(10);
     userData.password = await bcrypt.hash(userData.password, salt);
+
+
     const newUser = await User.create(userData);
     return res.status(200).json({
       message: `User ${userData.userName} has been created`,
@@ -48,7 +50,7 @@ const login = async (req, res, next) => {
     };
 
     const token = jwt.sign(payload, JWT_SECRET);
-    return res.status(200).json({ token });
+    return res.status(200).json({ token , payload});
   } catch (err) {
     next(err);
   }
